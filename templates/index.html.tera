@@ -1,0 +1,49 @@
+{% extends "base" %} {% block content %}
+<h1>自购电器和排插统计</h1>
+<a href="/add">添加</a>
+{% for s in items %}
+<div style="border: 2px solid; border-radius: 4px; padding: 4px; max-width: 600px; margin-bottom: 8px">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px">
+        <span>{{ s.name }}</span>
+        <button style="background: red; color: white; border-radius: 4px" data-record-id="{{ s.id }}" class="btn--danger">删除</button>
+    </div>
+    <div style="border: 1px solid; padding: 4px; margin-bottom: 4px">
+        插排：<br />
+        <div>情况：{{ s.jack_board_type }}</div>
+        <div>描述：{{ s.jack_board_info }}</div>
+        <div>
+            照片： <br />
+            {% for j_img in s.jack_board_imgs %}
+            <a href="{{ j_img }}" target="_blank"><img src="{{ j_img }}" style="width: 33%" /></a>
+            {% endfor %}
+        </div>
+    </div>
+    <div style="border: 1px solid; padding: 4px">
+        自购电器：<br />
+        <div>描述：{{ s.equipment_info }}</div>
+        <div>
+            照片： <br />
+            {% for e_img in s.equipment_imgs %}
+            <a href="{{ e_img }}" target="_blank"><img src="{{ e_img }}" style="width: 33%" /></a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+<script>
+    let btnNodeList = document.querySelectorAll(".btn--danger");
+    if (btnNodeList.length > 0) {
+        Array.from(document.querySelectorAll(".btn--danger")).forEach((btn) => {
+            let recordId = btn.dataset.recordId;
+            btn.onclick = async () => {
+                if (confirm("确定删除吗？")) {
+                    await fetch(`/${recordId}`, {
+                        method: "DELETE",
+                    });
+                    location.reload();
+                }
+            };
+        });
+    }
+</script>
+{% endblock content %}

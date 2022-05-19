@@ -1,0 +1,41 @@
+{% extends "base" %} {% block content %}
+<h1>添加</h1>
+<a href="/">返回</a>
+<form action="/" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <legend>姓名</legend>
+        <input type="text" name="name" value="" required />
+    </fieldset>
+    <fieldset>
+        <legend>排插</legend>
+        <fieldset>
+            <legend>类型</legend>
+            <select name="jack_board_type" value="无" required>
+                <option value="无">无</option>
+                <option value="自购">自购</option>
+                <option value="公司申领">公司申领</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <legend>描述</legend>
+            <textarea type="text" name="jack_board_info"></textarea>
+        </fieldset>
+        <fieldset>
+            <legend>照片</legend>
+            <input type="file" name="jack_board_imgs" multiple />
+        </fieldset>
+    </fieldset>
+    <fieldset>
+        <legend>自购电器</legend>
+        <fieldset>
+            <legend>描述</legend>
+            <textarea type="text" name="equipment_info"></textarea>
+        </fieldset>
+        <fieldset>
+            <legend>照片</legend>
+            <input type="file" name="equipment_imgs" multiple />
+        </fieldset>
+    </fieldset>
+    <input type="submit" value="提交" />
+</form>
+{% endblock content %}
