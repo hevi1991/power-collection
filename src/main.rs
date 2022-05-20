@@ -7,9 +7,9 @@ use rocket::fs::{relative, FileServer, TempFile};
 use rocket::response::Redirect;
 use rocket::serde::{json, Deserialize, Serialize};
 use rocket::tokio::sync::Mutex;
-use rocket::Config;
-use rocket::State;
+use rocket::{Config, State};
 use rocket_dyn_templates::{context, Template};
+use std::fs;
 use std::fs::{remove_file, File};
 use std::io::{Read, Write};
 use uuid::Uuid;
@@ -109,13 +109,13 @@ async fn add(list: Records<'_>, mut form: Form<AddForm<'_>>) -> Redirect {
     }
 
     let record = Record {
-        id: id,
+        id,
         name: String::from(&form.name),
         jack_board_type: String::from(&form.jack_board_type),
         jack_board_info: String::from(&form.jack_board_info),
-        jack_board_imgs: jack_board_imgs,
+        jack_board_imgs,
         equipment_info: String::from(&form.equipment_info),
-        equipment_imgs: equipment_imgs,
+        equipment_imgs,
     };
 
     println!("record: {:?}", record);
@@ -170,6 +170,12 @@ type Records<'r> = &'r State<RecordList>;
 
 #[launch]
 fn rocket() -> _ {
+    if let Err(e) = fs::create_dir_all("store") {
+        println!("{}", e);
+    };
+    if let Err(e) = fs::create_dir_all("static/images") {
+        println!("{}", e);
+    };
     let file = File::open(DB_PATH);
     let mut data = String::new();
     match file {
