@@ -10,11 +10,11 @@ use rocket::tokio::sync::Mutex;
 use rocket::Config;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
-use std::fs::File;
+use std::fs::{remove_file, File};
 use std::io::{Read, Write};
 use uuid::Uuid;
 
-const DB_PATH: &str = "config/db.json";
+const DB_PATH: &str = "store/db.json";
 
 #[get("/")]
 async fn index(list: Records<'_>) -> Template {
@@ -75,8 +75,8 @@ async fn add(list: Records<'_>, mut form: Form<AddForm<'_>>) -> Redirect {
             Ok(_) => {
                 jack_board_imgs.push(format!("images/{}", filename));
             }
-            Err(_e) => {
-                println!("{}", _e);
+            Err(e) => {
+                println!("{}", e);
             }
         };
     }
@@ -102,8 +102,8 @@ async fn add(list: Records<'_>, mut form: Form<AddForm<'_>>) -> Redirect {
             Ok(_) => {
                 equipment_imgs.push(format!("images/{}", filename));
             }
-            Err(_e) => {
-                println!("{}", _e);
+            Err(e) => {
+                println!("{}", e);
             }
         };
     }
@@ -130,6 +130,22 @@ async fn add(list: Records<'_>, mut form: Form<AddForm<'_>>) -> Redirect {
 #[delete("/<id>")]
 async fn remove(list: Records<'_>, id: String) -> &'static str {
     let mut list = list.lock().await;
+    match list.iter().find(|i| i.id == id) {
+        Some(record) => {
+            for path in &record.jack_board_imgs {
+                if let Err(e) = remove_file(format!("static/{}", path)) {
+                    println!("{}", e);
+                };
+            }
+            for path in &record.equipment_imgs {
+                if let Err(e) = remove_file(format!("static/{}", path)) {
+                    println!("{}", e);
+                };
+            }
+        }
+        None => return "failed",
+    };
+
     list.retain(|value| value.id != id);
     let items: Vec<&Record> = list.iter().map(|x| x).collect();
     save_in_db_json(&items);

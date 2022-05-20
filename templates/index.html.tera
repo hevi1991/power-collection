@@ -5,27 +5,31 @@
 <div style="border: 2px solid; border-radius: 4px; padding: 4px; max-width: 600px; margin-bottom: 8px">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px">
         <span>{{ s.name }}</span>
-        <button style="background: red; color: white; border-radius: 4px" data-record-id="{{ s.id }}" class="btn--danger">删除</button>
+        <button style="background: red; color: white; border-radius: 4px; border: none" data-record-id="{{ s.id }}" class="btn--danger">删除</button>
     </div>
-    <div style="border: 1px solid; padding: 4px; margin-bottom: 4px">
-        插排：<br />
+    <div style="border: 1px solid; padding: 4px; margin-bottom: 4px; border-radius: 4px">
+        插排：
         <div>情况：{{ s.jack_board_type }}</div>
         <div>描述：{{ s.jack_board_info }}</div>
         <div>
-            照片： <br />
-            {% for j_img in s.jack_board_imgs %}
-            <a href="{{ j_img }}" target="_blank"><img src="{{ j_img }}" style="width: 33%" /></a>
-            {% endfor %}
+            照片：
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 5px">
+                {% for j_img in s.jack_board_imgs %}
+                <a href="{{ j_img }}" target="_blank"><img src="{{ j_img }}" style="border-radius: 4px" /></a>
+                {% endfor %}
+            </div>
         </div>
     </div>
-    <div style="border: 1px solid; padding: 4px">
-        自购电器：<br />
+    <div style="border: 1px solid; padding: 4px; border-radius: 4px">
+        自购电器：
         <div>描述：{{ s.equipment_info }}</div>
         <div>
-            照片： <br />
-            {% for e_img in s.equipment_imgs %}
-            <a href="{{ e_img }}" target="_blank"><img src="{{ e_img }}" style="width: 33%" /></a>
-            {% endfor %}
+            照片：
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 5px">
+                {% for e_img in s.equipment_imgs %}
+                <a href="{{ e_img }}" target="_blank"><img src="{{ e_img }}" style="border-radius: 4px" /></a>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
